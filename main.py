@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 from src.pricing import quote_vpc_amount
 from src.address_pool import AddressPool
 from src.order_store import OrderStore
-from src.providers.router import quote_crypto_amount, check_payment_stub
-from src.providers.check_payment_btc import check_payment_btc
+from src.providers.router import quote_crypto_amount
+from src.providers.check_payment_btc import check_payment_btc, check_payment_stub
 from src.solana_sender import send_vpc_tokens
 
 load_dotenv()
