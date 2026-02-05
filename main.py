@@ -5,11 +5,9 @@ from dotenv import load_dotenv
 from src.pricing import quote_vpc_amount
 from src.address_pool import AddressPool
 from src.order_store import OrderStore
-
-# ✅ IMPORTS CORRIGÉS
-from src.providers.router import quote_crypto_amount, check_payment_stub
+from src.providers.router import quote_crypto_amount
+from src.providers.check_payment_stub import check_payment_stub
 from src.providers.check_payment_btc import check_payment_btc
-
 from src.solana_sender import send_vpc_tokens
 
 load_dotenv()
@@ -22,11 +20,9 @@ app = Flask(__name__, template_folder="templates")
 store = OrderStore(path="data/orders.json")
 pool = AddressPool(ttl_minutes=ORDER_TTL_MINUTES)
 
-
 @app.get("/")
 def home():
     return render_template("index.html")
-
 
 @app.post("/api/order")
 def create_order():
@@ -91,7 +87,6 @@ def create_order():
         expires_in=f"{ORDER_TTL_MINUTES} minutes",
     )
 
-
 @app.get("/api/order/<order_id>")
 def get_order(order_id: str):
     o = store.get(order_id)
@@ -115,7 +110,6 @@ def get_order(order_id: str):
         pay_symbol=o["pay_symbol"],
         txid=o.get("txid"),
     )
-
 
 def background_loop():
     while True:
@@ -155,12 +149,9 @@ def background_loop():
         if changed:
             store.save()
 
-
 if __name__ == "__main__":
     os.makedirs("data", exist_ok=True)
-
     import threading
     t = threading.Thread(target=background_loop, daemon=True)
     t.start()
-
     app.run(host="0.0.0.0", port=PORT, debug=False)
